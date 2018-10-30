@@ -21,5 +21,5 @@ source.load().then(() => {
 
 function analysis() {
   window.requestAnimationFrame(analysis);
-  console.log(analyser.analyse(0.06666, Date.now()));
+  analyser.analyse(0.06666, Date.now());
 }
