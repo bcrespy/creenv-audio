@@ -24,7 +24,7 @@
     "mail": "baptiste.crespy@gmail.com",
     "url": "https://github.com/bcrespy/creenv-/issues"
   },
-  "main": "lib/index.js",
+  "main": "lib",
   "files": [
     "lib"
   ],
