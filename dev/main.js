@@ -1,6 +1,6 @@
-import AudioSource from "../lib/source/microphone";
-import AudioStream from "../lib/stream";
-import Analyser from "../lib/analyser";
+import AudioSource from "../source/microphone";
+import AudioStream from "../stream";
+import Analyser from "../analyser";
 
 
 let source = new AudioSource(false);

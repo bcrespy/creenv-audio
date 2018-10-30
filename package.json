@@ -24,9 +24,16 @@
     "mail": "baptiste.crespy@gmail.com",
     "url": "https://github.com/bcrespy/creenv-/issues"
   },
-  "main": "lib",
+  "main": "index.js",
   "files": [
-    "lib"
+    "source",
+    "analyser.js",
+    "audio-analysed-data.js",
+    "audio-data.js",
+    "index.js",
+    "options.js",
+    "peak.js",
+    "stream.js"
   ],
   "scripts": {
     "clean": "",
