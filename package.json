@@ -1,9 +1,17 @@
 {
-  "name": "@creenv/",
+  "name": "@creenv/audio",
   "version": "0.0.1",
-  "description": "",
+  "description": "load audio from different sources (file, microphone, soundcloud...), audio analysis (beat detection, frequency...)",
   "keywords": [
-    ""
+    "creenv",
+    "audio",
+    "analysis",
+    "source",
+    "soundcloud",
+    "file",
+    "library",
+    "sound",
+    "music"
   ],
   "license": "MIT",
   "author": "Baptiste Crespy",

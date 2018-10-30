@@ -65,7 +65,7 @@ module.exports = {
   devServer: {
     port: 9000,
     inline: true,
-    contentBase: "./dist/",
+    contentBase: "./dev/",
     open: true,
     overlay: true,
     stats: "minimal"
