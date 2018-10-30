@@ -45,12 +45,11 @@ class AudioAnalyser {
    * creates an analyser to compute and get the analysed data such as peak deteciton, signal energy, energy average
    * 
    * @param {AudioStream} stream the stream, created from a source, that will be analysed
-   * @param {number} bufferSize Size of the data buffer
+   * @param {object} options options for the peak detection algorithms
    */
-  constructor (stream, options) {
+  constructor (stream, options = {}) {
     // object deep merge
     this.options = deepmerge(DEFAULT_OPTIONS, options);
-    console.log(this.options);
     this.checkOptions(this.options);
 
     /**
