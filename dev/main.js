@@ -1,7 +1,12 @@
-import AudioSource from "../source/microphone";
-import AudioStream from "../stream";
-import Analyser from "../analyser";
+import AudioSource from "../lib/source/microphone";
+import AudioStream from "../lib/stream";
+import Analyser from "../lib/analyser";
 import load from "@creenv/file-loader";
+import PreloadFile from "../lib/source/preload-file";
+
+
+let pf = new PreloadFile("gost-arise.mp3");
+pf.load();
 
 
 //let offlineContext = new OfflineAudioContext();
@@ -10,6 +15,7 @@ let context = new AudioContext();
 
 let mem = new Array();
 
+/*
 load("gost-arise.mp3", "arraybuffer").then(data => {
   context.decodeAudioData(data).then(buffer => {
     let offlineContext = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
@@ -40,3 +46,4 @@ load("gost-arise.mp3", "arraybuffer").then(data => {
     source.start();
   });
 });
+*/
