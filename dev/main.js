@@ -7,6 +7,38 @@ import AudioManager from "../lib/manager";
 import Creenv from "@creenv/core";
 
 
+
+/**
+ * TEST peaks integrity
+ */
+
+const framerate = 1/60;
+
+let manager = new AudioManager(AudioManager.SOURCE_TYPE.FILE, {
+  filepath: "gost-arise.mp3"
+}, true);
+let timer = 0;
+
+manager.init().then(() => {
+  timer = performance.now();
+  update();
+});
+
+
+
+function update () {
+  setTimeout(() => {
+    update();
+  }, 10);
+  timer = performance.now();
+  console.log({
+    timer: timer,
+    data: manager.getAnalysedAudioData(framerate, timer)
+  })
+}
+
+
+/*
 class MyProject extends Creenv {
   init () {
     return new Promise((resolve, reject) => {
@@ -24,6 +56,7 @@ class MyProject extends Creenv {
 
 let project = new MyProject();
 project.bootstrap();
+*/
 
 /*
 load("gost-arise.mp3", "arraybuffer").then(data => {
