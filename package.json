@@ -1,6 +1,6 @@
 {
   "name": "@creenv/audio",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "load audio from different sources (file, microphone, soundcloud...), audio analysis (beat detection, frequency...)",
   "keywords": [
     "creenv",
