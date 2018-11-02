@@ -4,16 +4,24 @@ import Analyser from "../lib/analyser";
 import load from "@creenv/file-loader";
 import PreloadFile from "../lib/source/preload-file";
 
-
-let pf = new PreloadFile("gost-arise.mp3");
-pf.load();
+import AudioManager from "../lib/manager";
 
 
-//let offlineContext = new OfflineAudioContext();
+let manager = new AudioManager(AudioManager.SOURCE_TYPE.FILE, {
+  filepath: "gost-arise.mp3"
+}, false);
+manager.init().then(update);
 
-let context = new AudioContext();
+let deltaT = 0, elapsed = 0, lastFrame;
 
-let mem = new Array();
+
+function update () {
+  setTimeout(() => {
+    update();
+  }, 1000);
+  elapsed+= performance.now()/ 10000;
+  console.log(manager.analysis(elapsed));
+}
 
 /*
 load("gost-arise.mp3", "arraybuffer").then(data => {
