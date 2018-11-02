@@ -18,7 +18,7 @@ class MyProject extends Creenv {
   }
 
   render () {
-    console.log(this.elapsedTime);
+    console.log(this.manager.getAnalysedAudioData(this.deltaT, this.elapsedTime));
   }
 }
 
