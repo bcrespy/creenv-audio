@@ -1,27 +1,29 @@
-import AudioSource from "../lib/source/microphone";
-import AudioStream from "../lib/stream";
 import Analyser from "../lib/analyser";
 import load from "@creenv/file-loader";
 import PreloadFile from "../lib/source/preload-file";
 
 import AudioManager from "../lib/manager";
 
-
-let manager = new AudioManager(AudioManager.SOURCE_TYPE.FILE, {
-  filepath: "gost-arise.mp3"
-}, false);
-manager.init().then(update);
-
-let deltaT = 0, elapsed = 0, lastFrame;
+import Creenv from "@creenv/core";
 
 
-function update () {
-  setTimeout(() => {
-    update();
-  }, 1000);
-  elapsed+= performance.now()/ 10000;
-  console.log(manager.analysis(elapsed));
+class MyProject extends Creenv {
+  init () {
+    return new Promise((resolve, reject) => {
+      this.manager = new AudioManager(AudioManager.SOURCE_TYPE.FILE, {
+        filepath: "gost-arise.mp3"
+      }, false);
+      this.manager.init().then(resolve);
+    });
+  }
+
+  render () {
+    console.log(this.elapsedTime);
+  }
 }
+
+let project = new MyProject();
+project.bootstrap();
 
 /*
 load("gost-arise.mp3", "arraybuffer").then(data => {
