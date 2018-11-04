@@ -33,18 +33,10 @@ class OfflineFileSource extends AudioSource {
      */
     this.bufferSize = bufferSize;
 
-    this.bufferLength = 0;
-
     /**
      * @type {OfflineAudioContext}
      */
     this.offlineContext = null;
-
-    /**
-     * duration of the input audio, in ms
-     * @type {number}
-     */
-    this.duration = 0;
 
     /**
      * The history of the recorded audio data 
@@ -62,8 +54,6 @@ class OfflineFileSource extends AudioSource {
         console.log("audio file is being processed");
         // file is turned into an audio buffer
         this.audioContext.decodeAudioData(data).then(buffer => {
-          this.duration = buffer.duration*1000; // conversion in ms
-
           // an offline context matching the buffer is created 
           let offlineContext = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
           let source = offlineContext.createBufferSource();
@@ -73,14 +63,9 @@ class OfflineFileSource extends AudioSource {
           let scp = offlineContext.createScriptProcessor(this.bufferSize, buffer.numberOfChannels, buffer.numberOfChannels);
           let analyser = offlineContext.createAnalyser();
           analyser.fftSize = this.bufferSize;
-          this.bufferLength = analyser.frequencyBinCount;
-
-          let gainNode = offlineContext.createGain();
-          gainNode.gain.setValueAtTime(1.0, 0);
       
-          source.connect(gainNode);
-          gainNode.connect(scp);
-          gainNode.connect(analyser);
+          source.connect(scp);
+          source.connect(analyser);
           scp.connect(offlineContext.destination);
       
           // each time a sample is processed this method gets called 
@@ -92,7 +77,7 @@ class OfflineFileSource extends AudioSource {
             analyser.getByteTimeDomainData(timedomainData);
             
             // data is sent to the history 
-            let data = new AudioData(freqData, timedomainData, this.bufferLength);
+            let data = new AudioData(freqData, timedomainData, this.bufferSize);
             this.dataHistory.saveDataAt(data, e.playbackTime*1000);
           }
       
@@ -112,10 +97,7 @@ class OfflineFileSource extends AudioSource {
    * 
    */
   getAudioData (timer) {
-    let data = this.dataHistory.getDataAt(timer);
-    return (!data) ?
-      new AudioData(new Uint8Array(this.bufferSize), new Uint8Array(this.bufferSize), this.bufferSize) :
-      data;
+    return this.dataHistory.getDataAt(timer);
   }
 };
 

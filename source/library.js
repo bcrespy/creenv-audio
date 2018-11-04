@@ -27,12 +27,6 @@ class AudioSourceLibrary extends AudioSource {
      * @type {AudioStream}
      */
     this.stream = new AudioStream(this, fftSize, 1.0);
-
-    /**
-     * duration of the audio file, in ms
-     * @type {number}
-     */
-    this.duration = 0;
   }
 
   /**
@@ -47,7 +41,6 @@ class AudioSourceLibrary extends AudioSource {
         this.audioContext.decodeAudioData(audioData).then(buffer => {
           this.source = this.audioContext.createBufferSource();
           this.source.buffer = buffer;
-          this.duration = buffer.duration*1000;
           this.stream.init();
           resolve();
         }).catch(reject);

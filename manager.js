@@ -48,7 +48,7 @@ class AudioManager {
 
     this.capture = capture;
 
-    this.analyser = new AudioAnalyser(this.options.bufferSize, this.options.analyser);
+    this.analyser = new AudioAnalyser(this.options.bufferSize, this.options.analyserOptions);
 
     // find a better way to do that, maybe with the AudioSource factory creating the audio source ? pass it options parameter
     this.audioSource = AudioSourceFactory(sourceType, this.options, capture);

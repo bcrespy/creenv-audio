@@ -73,7 +73,7 @@ class AudioAnalyser {
      * if all the analysis are not required by the visualizer
      */
     this.iterations++;
-    
+
     this.data.setTimedomainData(audioData.timedomainData);
     this.data.setFrequenciesData(audioData.frequencyData);
 
@@ -144,6 +144,13 @@ class AudioAnalyser {
    */
   getAnalysedData () {
     return this.data;
+  }
+
+  /**
+   * @return {AudioAnalysedDataForVisualization} Only the data specified in the analyser config
+   */
+  getAnalysedDataForVisualization () {
+    return new AudioAnalysedDataForVisualization(this.data);
   }
 
   /**

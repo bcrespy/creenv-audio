@@ -5,6 +5,7 @@ import PreloadFile from "../lib/source/preload-file";
 import AudioManager from "../lib/manager";
 
 import Creenv from "@creenv/core";
+import Canvas from "@creenv/canvas";
 
 
 
@@ -12,29 +13,73 @@ import Creenv from "@creenv/core";
  * TEST peaks integrity
  */
 
-const framerate = 1/60;
+const framerate = 1/60 * 1000;
 
 let manager = new AudioManager(AudioManager.SOURCE_TYPE.FILE, {
-  filepath: "gost-arise.mp3"
+  filepath: "gost-arise.mp3",
+  analyser: {
+    peakDetection: {
+      options: {
+        threshold: 1.8
+      }
+    }
+  }
 }, true);
+let start = 0;
+let duration = 0;
 let timer = 0;
 
 manager.init().then(() => {
-  timer = performance.now();
-  update();
+  start = performance.now();
+  duration = manager.audioSource.duration;
+  update2();
 });
 
-
-
 function update () {
-  setTimeout(() => {
-    update();
-  }, 10);
-  timer = performance.now();
-  console.log({
-    timer: timer,
-    data: manager.getAnalysedAudioData(framerate, timer)
-  })
+  let data = manager.getAnalysedAudioData(framerate, timer);
+  timer = performance.now() - start;
+  addPoint(150 + timer/duration*800, 150 + data.energy);
+
+  console.log(timer, data.energy);
+
+  if (timer < duration) {
+    window.requestAnimationFrame(update);
+  } else {
+    console.log("ended");
+  }
+}
+
+function update2 () {
+  let data = manager.getAnalysedAudioData(framerate, timer);
+
+  /*if (data.peak.value == 1) {
+    addBar(150 + timer/duration * 1000, 300);
+  }*/
+
+  addPoint(150 + timer/duration*800, 150 + data.energy);
+  timer+= framerate;
+
+  console.log(timer, data.energy);
+
+  if (timer < duration) {
+    setTimeout(() => {
+      update2();
+    }, 1);
+  } else {
+    console.log("ended");
+  }
+}
+
+let cvs = new Canvas();
+
+function addBar (x, y) {
+  cvs.fillStyle("red");
+  cvs.rect(x, y-30, 1, 30);
+}
+
+function addPoint (x, y) {
+  cvs.fillStyle("#00ff00");
+  cvs.rect(x, y, 1, 1);
 }
 
 

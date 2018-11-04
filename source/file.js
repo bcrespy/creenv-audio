@@ -30,12 +30,6 @@ class AudioSourceFile extends AudioSource {
      * @type {AudioStream}
      */
     this.stream = new AudioStream(this, fftSize);
-
-    /**
-     * duration of the audio file, in ms
-     * @type {number}
-     */
-    this.duration = 0;
   }
 
   /**
@@ -52,7 +46,6 @@ class AudioSourceFile extends AudioSource {
         this.audioContext.decodeAudioData(data).then(buffer => {
           this.source = this.audioContext.createBufferSource();
           this.source.buffer = buffer;
-          this.duration = buffer.duration*1000;
           this.stream.init();
           resolve();
         });
