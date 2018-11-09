@@ -35,6 +35,7 @@ let timer = 0;
 let cvs = new Canvas();
 
 manager.init().then(() => {
+  // (manager.getAudioCopy(1.5, 1.0))
   start = performance.now();
   duration = manager.audioSource.duration;
   cvs.fillStyle("red");
