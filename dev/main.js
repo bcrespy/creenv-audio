@@ -13,10 +13,13 @@ import Canvas from "@creenv/canvas";
  * TEST peaks integrity
  */
 
+
+const CAPTURE = true;
+
 const framerate = 1/60 * 1000;
 
 let manager = new AudioManager(AudioManager.SOURCE_TYPE.FILE, {
-  filepath: "gost-arise.mp3",
+  filepath: "test.wav",
   analyser: {
     peakDetection: {
       options: {
@@ -24,23 +27,28 @@ let manager = new AudioManager(AudioManager.SOURCE_TYPE.FILE, {
       }
     }
   }
-}, true);
+}, CAPTURE);
 let start = 0;
 let duration = 0;
 let timer = 0;
 
+let cvs = new Canvas();
+
 manager.init().then(() => {
   start = performance.now();
   duration = manager.audioSource.duration;
-  update2();
+  cvs.fillStyle("red");
+  cvs.rect(0,200,700,1);
+  if (CAPTURE) update()
+  else update2();
 });
 
 function update () {
   let data = manager.getAnalysedAudioData(framerate, timer);
   timer = performance.now() - start;
-  addPoint(150 + timer/duration*800, 150 + data.energy);
+  addPoint(50+timer/duration*400, 200-data.energy);
 
-  console.log(timer, data.energy);
+  console.log(data.energy);
 
   if (timer < duration) {
     window.requestAnimationFrame(update);
@@ -56,10 +64,10 @@ function update2 () {
     addBar(150 + timer/duration * 1000, 300);
   }*/
 
-  addPoint(150 + timer/duration*800, 150 + data.energy);
+  addPoint(50+timer/duration*400, 200-data.energy);
   timer+= framerate;
 
-  console.log(timer, data.energy);
+  console.log(data.energy);
 
   if (timer < duration) {
     setTimeout(() => {
@@ -70,7 +78,6 @@ function update2 () {
   }
 }
 
-let cvs = new Canvas();
 
 function addBar (x, y) {
   cvs.fillStyle("red");
@@ -79,7 +86,7 @@ function addBar (x, y) {
 
 function addPoint (x, y) {
   cvs.fillStyle("#00ff00");
-  cvs.rect(x, y, 1, 1);
+  cvs.rect(x, y, 2, 1);
 }
 
 

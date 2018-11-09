@@ -75,8 +75,12 @@ class OfflineFileSource extends AudioSource {
           analyser.fftSize = this.bufferSize;
           this.bufferLength = analyser.frequencyBinCount;
 
-          source.connect(scp);
-          source.connect(analyser);
+          let gainNode = offlineContext.createGain();
+          gainNode.gain.setValueAtTime(1.0, 0);
+      
+          source.connect(gainNode);
+          gainNode.connect(scp);
+          gainNode.connect(analyser);
           scp.connect(offlineContext.destination);
       
           // each time a sample is processed this method gets called 
@@ -88,74 +92,19 @@ class OfflineFileSource extends AudioSource {
             analyser.getByteTimeDomainData(timedomainData);
             
             // data is sent to the history 
-            let data = new AudioData(timedomainData, freqData, this.bufferLength);
+            let data = new AudioData(freqData, timedomainData, this.bufferLength);
             this.dataHistory.saveDataAt(data, e.playbackTime*1000);
           }
-
-          offlineContext.oncomplete = () => {
-            console.log("audio file processed");
+      
+          offlineContext.oncomplete = e => {
+            console.log("audio was processed");
             resolve();
-          };
-
-          /*let timerAnalysis = 0,
-              sampleRate = 1.0/60.0; // in seconds
-
-          offlineContext.suspend(sampleRate).then(() => {
-            let freqData = new Uint8Array(analyser.frequencyBinCount);
-            let timedomainData = new Uint8Array(analyser.frequencyBinCount);
-
-            analyser.getByteFrequencyData(freqData);
-            analyser.getByteTimeDomainData(timedomainData);
-
-            let data = new AudioData(freqData, timedomainData, this.bufferLength);
-            this.dataHistory.saveDataAt(data, timerAnalysis*1000);
-          });*/
+          }
       
           offlineContext.startRendering();
           source.start();
-
-          /*this.contextAnalysis(offlineContext, 0, analyser).then(() => {
-            resolve();
-          });*/
         });
       });
-    });
-  }
-
-  /**
-   * this method can also be used as a tool analysis, but it is a bit slower than the other algorithm
-   */
-  contextAnalysis (offlineContext, timerAnalysis, analyser) {
-    return new Promise((resolve, reject) => {
-
-      const rec = (offlineContext, timerAnalysis, analyser) => {
-        let sampleRate = 1/60;
-        offlineContext.suspend(timerAnalysis).then(() => {
-          let freqData = new Uint8Array(analyser.frequencyBinCount);
-          let timedomainData = new Uint8Array(analyser.frequencyBinCount);
-    
-          analyser.getByteFrequencyData(freqData);
-          analyser.getByteTimeDomainData(timedomainData);
-
-          let data = new AudioData(timedomainData, freqData, this.bufferLength);
-          this.dataHistory.saveDataAt(data, timerAnalysis*1000);
-    
-          timerAnalysis+= sampleRate;
-          rec(offlineContext, timerAnalysis, analyser);
-        });
-    
-        if (timerAnalysis == 0) 
-          offlineContext.startRendering();
-        else {
-          if (((timerAnalysis+sampleRate)*1000)/this.duration >= 1 ) {
-            resolve();
-          } else {
-            offlineContext.resume();
-          }
-        }
-      } 
-
-      rec(offlineContext, 0, analyser);
     });
   }
 
